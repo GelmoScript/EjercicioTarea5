@@ -1,0 +1,59 @@
+﻿@page "/product-sells"
+@inject northwindContext context
+@using Querys.Components
+
+<h3>Unidades  vendidas por producto</h3>
+
+@if (products == null || products.Count <= 0)
+{
+    <SurveyPrompt Title="Productos no encontrados" />
+}
+else
+{
+    <ul>
+        @foreach (var p in products)
+        {
+            <List>
+                <Bold>@p.Product.ProductName</Bold>
+                <Thin>@p.Quantity</Thin>
+            </List>
+        }
+    </ul>
+}
+
+@code {
+
+
+    List<ProductQuantity> products;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetProducts();
+    }
+
+    void GetProducts()
+    {
+        products = context.OrderDetails
+            .GroupBy(od => od.ProductId)
+            .Select(g => new ProductQuantity
+            {
+                Quantity = g.Count(),
+                ProductId = g.Key
+            }).ToList();
+
+        products.ForEach(p =>
+        {
+            p.Product = context.Products.Find(p.ProductId);
+        });
+
+
+    }
+
+    class ProductQuantity
+    {
+        public int? ProductId { get; set; }
+        public Products Product { get; set; }
+        public int Quantity { get; set; }
+    }
+}

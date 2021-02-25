@@ -1,0 +1,72 @@
+﻿<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Querys</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <NavLink class="nav-link" href="employee-list" Match="NavLinkMatch.All">
+                Lista de empleados
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="expensive-products" Match="NavLinkMatch.All">
+                Productos caros
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="customers-per-country" Match="NavLinkMatch.All">
+                Clientes por paises
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="products-per-category" Match="NavLinkMatch.All">
+                Productos por Categoria
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="product-sells" Match="NavLinkMatch.All">
+                Unidades  vendidas por producto
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="best-customers" Match="NavLinkMatch.All">
+                Clientes con mayores compras
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="best-sellers" Match="NavLinkMatch.All">
+                Ventas vendidas en Enero 2006
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="suppliers" Match="NavLinkMatch.All">
+                Suplidores
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="transporters" Match="NavLinkMatch.All">
+                Envios de transportistas
+            </NavLink>
+        </li>
+        <li class="nav-item">
+            <NavLink class="nav-link" href="best-customer" Match="NavLinkMatch.All">
+                Mejor Cliente
+            </NavLink>
+        </li>
+    </ul>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

@@ -1,0 +1,68 @@
+﻿@page "/suppliers"
+@inject northwindContext context
+@using Querys.Components
+
+<h3>Suplidores</h3>
+
+@if (supplierProducts == null || supplierProducts.Count() <= 0)
+{
+    <SurveyPrompt Title="Suplidores no encontrados" />
+}
+else
+{
+    <ul>
+        @foreach (var supplier in supplierProducts)
+        {
+            <List>
+                <Bold>Id: @supplier.Id @supplier.Company</Bold>
+                <Thin>@supplier.Products</Thin>
+            </List>
+        }
+    </ul>
+}
+
+@code {
+
+    IEnumerable<SupplierProducts> supplierProducts;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetSupplier();
+    }
+
+    void GetSupplier()
+    {
+        var query = from s in context.Suppliers
+                    join p in context.Products on s.Id.ToString() equals p.SupplierIds
+                    group p by new { s.Id, s.Company } into g
+                    select new SupplierProducts
+                    {
+                        Id = g.Key.Id,
+                        Company = g.Key.Company,
+                        Products = g.Count()
+                    };
+
+        supplierProducts = query.ToList().OrderByDescending(sp => sp.Products);
+    }
+
+    int GetIds(string value)
+    {
+        string[] idstring = value.Split(';', StringSplitOptions.TrimEntries);
+        int[] idint = new int[idstring.Count()];
+
+        foreach (string id in idstring)
+        {
+            idint.Append(int.Parse(id));
+        }
+
+        return idint[0];
+    }
+
+    class SupplierProducts
+    {
+        public int Id { get; set; }
+        public string Company { get; set; }
+        public int Products { get; set; }
+    }
+}

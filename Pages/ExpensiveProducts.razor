@@ -1,0 +1,43 @@
+﻿@page "/expensive-products"
+@inject northwindContext context
+@using Querys.Components
+
+<h3>Productos mas caros</h3>
+
+@if (products == null || products.Count <= 0)
+{
+    <SurveyPrompt Title="Productos no encontrados" />
+}
+else
+{
+    <ul>
+        @foreach (var prod in products)
+        {
+            <List>
+                <Bold>@prod.ProductName</Bold>
+                <Thin>@prod.ListPrice</Thin>
+            </List>
+        }
+    </ul>
+}
+
+@code {
+
+    List<Products> products;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetProducts();
+    }
+
+    void GetProducts()
+    {
+
+        products = context.Products
+            .OrderByDescending(p => p.ListPrice)
+            .Take(5)
+            .ToList();
+    }
+
+}

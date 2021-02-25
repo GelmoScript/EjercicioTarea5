@@ -1,0 +1,51 @@
+﻿@page "/customers-per-country"
+@inject northwindContext context
+@using Querys.Components
+
+<h3>Clientes por paises</h3>
+
+@if (customers == null || customers.Count <= 0)
+{
+    <SurveyPrompt Title="Empleados no encontrados" />
+}
+else
+{
+    <ul>
+        @foreach (var cus in customers)
+        {
+            <List>
+                <Bold>@cus.Country</Bold>
+                <Thin>@cus.Count</Thin>
+            </List>
+        }
+    </ul>
+}
+
+@code {
+
+    List<CustomersPerCountry> customers;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetCustomers();
+    }
+
+    void GetCustomers()
+    {
+        customers = context.Customers
+            .GroupBy(c => c.StateProvince)
+            .Select(c => new CustomersPerCountry
+            {
+                Country = c.Key,
+                Count = c.Count()
+            }).ToList();
+
+    }
+
+    class CustomersPerCountry
+    {
+        public string Country { get; set; }
+        public int Count { get; set; }
+    }
+}

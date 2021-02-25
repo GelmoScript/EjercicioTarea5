@@ -1,0 +1,37 @@
+﻿@page "/best-sellers"
+@inject northwindContext context
+@using Querys.Components
+
+<h3>Total de ventas vendidas en Enero 2006</h3>
+
+@if (sells == null)
+{
+    <SurveyPrompt Title="Clientes no encontrados" />
+}
+else
+{
+    <List>
+        <Bold>@sells vendidos</Bold>
+    </List>
+}
+
+@code {
+
+    decimal? sells;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetSell();
+    }
+
+    void GetSell()
+    {
+        var query = from o in context.Orders
+                    join od in context.OrderDetails on o.Id equals od.OrderId
+                    where o.OrderDate.Value.Month == 1 && o.OrderDate.Value.Year == 2006
+                    select od.Quantity * od.UnitPrice;
+
+        sells = Math.Round(query.Sum().Value, 2);
+    }
+}

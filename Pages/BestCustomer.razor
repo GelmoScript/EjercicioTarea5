@@ -1,0 +1,68 @@
+﻿@page "/best-customer"
+@inject northwindContext context
+@using Querys.Components
+
+<h3>Mejor Cliente</h3>
+
+@if (customer == null)
+{
+    <SurveyPrompt Title="Suplidores no encontrados" />
+}
+else
+{
+    <List>
+        <Bold>@customer.Id @customer.FirstName</Bold>
+        <Thin>@customer.Bought</Thin>
+    </List>
+
+}
+
+@code {
+
+        BestCustomers customer;
+
+        protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetCustomer();
+    }
+
+    void GetCustomer()
+    {
+        var query = from c in context.Customers
+                    join o in context.Orders on c.Id equals o.CustomerId
+                    join od in context.OrderDetails on o.Id equals od.OrderId
+                    group od by new { c.Id, c.Company, c.FirstName, c.LastName } into g
+                    select new BestCustomers
+                    {
+                        Id = g.Key.Id,
+                        Company = g.Key.Company,
+                        FirstName = g.Key.FirstName,
+                        LastName = g.Key.LastName,
+                        @*EmailAddress = g.Key.c.EmailAddress,
+                        JobTitle = g.Key.c.JobTitle,
+                        BusinessPhone = g.Key.c.BusinessPhone,
+                        HomePhone = g.Key.c.HomePhone,
+                        MobilePhone = g.Key.c.MobilePhone,
+                        FaxNumber = g.Key.c.FaxNumber,
+                        Address = g.Key.c.Address,
+                        City = g.Key.c.City,
+                        StateProvince = g.Key.c.StateProvince,
+                        ZipPostalCode = g.Key.c.ZipPostalCode,
+                        CountryRegion = g.Key.c.CountryRegion,
+                        WebPage = g.Key.c.WebPage,
+                        Notes = g.Key.c.Notes,
+                        Attachments = g.Key.c.Attachments,*@
+                        OrdersQty = g.Count(),
+                        Bought = Math.Round(g.Sum(g => g.Quantity * g.UnitPrice).Value, 2)
+                    };
+        customer = query.ToList().OrderByDescending(bc => bc.Bought).ElementAt(0);
+    }
+
+    class BestCustomers : Customers
+    {
+        public int OrdersQty { get; set; }
+        public decimal Bought { get; set; }
+    }
+
+}

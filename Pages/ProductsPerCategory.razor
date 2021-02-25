@@ -1,0 +1,51 @@
+﻿@page "/products-per-category"
+@inject northwindContext context
+@using Querys.Components
+
+<h3>Productos por categoria</h3>
+
+@if (categoryProducts == null || categoryProducts.Count <= 0)
+{
+    <SurveyPrompt Title="Productos no encontrados" />
+}
+else
+{
+    <ul>
+        @foreach (var cat in categoryProducts)
+        {
+            <List>
+                <Bold>@cat.Category</Bold>
+                <Thin>@cat.ProductsCount</Thin>
+            </List>
+        }
+    </ul>
+}
+
+@code {
+
+    List<CategoryProducts> categoryProducts;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetProducts();
+    }
+
+    void GetProducts()
+    {
+        categoryProducts = context.Products
+            .GroupBy(p => p.Category)
+            .Select(p => new CategoryProducts
+            {
+                Category = p.Key,
+                ProductsCount = p.Count()
+            }).ToList();
+
+    }
+
+    class CategoryProducts
+    {
+        public string Category { get; set; }
+        public int ProductsCount { get; set; }
+    }
+}

@@ -1,0 +1,53 @@
+﻿@page "/transporters"
+@inject northwindContext context
+@using Querys.Components
+
+<h3>Envios de transportistas</h3>
+
+@if (tranportersShips == null || tranportersShips.Count() <= 0)
+{
+    <SurveyPrompt Title="Suplidores no encontrados" />
+}
+else
+{
+    <ul>
+        @foreach (var trans in tranportersShips)
+        {
+            <List>
+                <Bold>@trans.Name</Bold>
+                <Thin>@trans.Ships</Thin>
+            </List>
+        }
+    </ul>
+}
+
+@code {
+
+    IEnumerable<TranportersShips> tranportersShips;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetTransporters();
+    }
+
+    void GetTransporters()
+    {
+        var query = from o in context.Orders
+                    join s in context.Shippers on o.ShipperId equals s.Id
+                    group o by new { s.Company } into g
+                    select new TranportersShips
+                    {
+                        Name = g.Key.Company,
+                        Ships = g.Count()
+                    };
+
+        tranportersShips = query.AsEnumerable();
+    }
+
+    class TranportersShips
+    {
+        public string Name { get; set; }
+        public int Ships { get; set; }
+    }
+}

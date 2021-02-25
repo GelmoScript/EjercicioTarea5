@@ -1,0 +1,36 @@
+﻿@page "/employee-list"
+@inject northwindContext context
+@using Querys.Components
+
+<h3>Lista de Empleados</h3>
+
+@if (employees == null || employees.Count <= 0)
+{
+    <SurveyPrompt Title="Empleados no encontrados" />
+}
+else
+{
+    <ul>
+        @foreach (var emp in employees)
+        {
+            <List>
+                <Bold>@emp.FirstName @emp.LastName</Bold>
+                <Thin>@emp.BusinessPhone</Thin>
+            </List>
+        }
+    </ul>
+}
+
+
+@code {
+
+    List<Employees> employees;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetEmployees();
+    }
+
+    void GetEmployees() => employees = context.Employees.ToList();
+}

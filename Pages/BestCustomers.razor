@@ -1,0 +1,67 @@
+﻿@page "/best-customers"
+@inject northwindContext context
+@using Querys.Components
+
+<h3>Clientes con mayores compras</h3>
+
+@if (mostBoughtCustomers == null || mostBoughtCustomers.Count() <= 0)
+{
+    <SurveyPrompt Title="Clientes no encontrados" />
+}
+else
+{
+    <ul>
+        @foreach (var customer in mostBoughtCustomers)
+        {
+            <List>
+                <Bold>Id: @customer.CustomerId @customer.CustomerName</Bold>
+                <Thin>@customer.Bought</Thin>
+            </List>
+        }
+    </ul>
+}
+
+@code {
+
+    IEnumerable<MostBoughtCustomers> mostBoughtCustomers;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetCustomers();
+    }
+
+    void GetCustomers()
+    {
+        try
+        {
+
+            var query = from c in context.Customers
+                    join o in context.Orders on c.Id equals o.CustomerId
+                    join od in context.OrderDetails on o.Id equals od.OrderId
+                    group od by new { c.Id, c.FirstName, c.LastName } into g
+                    select new MostBoughtCustomers
+                    {
+                        CustomerId = g.Key.Id,
+                        CustomerName = g.Key.FirstName + " " + g.Key.LastName,
+                        Bought = Math.Round(g.Sum(od => od.Quantity * od.UnitPrice).Value, 2)
+                    };
+            mostBoughtCustomers = query.ToList().OrderByDescending(m => m.Bought).Take(10);
+        }
+        catch (ArgumentNullException ane)
+        {
+        
+        }
+
+
+    }
+
+
+
+    class MostBoughtCustomers
+    {
+        public int? CustomerId { get; set; }
+        public string CustomerName { get; set; }
+        public decimal? Bought { get; set; }
+    }
+}

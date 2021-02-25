@@ -1,0 +1,33 @@
+﻿<Properties StartupConfiguration="{3CC48701-AFA0-4A49-9275-0162E2158C5B}|Default">
+  <MonoDevelop.Ide.ItemProperties.Querys PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Pages/CoountryCustromers.razor">
+    <Files>
+      <File FileName="Shared/NavMenu.razor" Line="57" Column="30" />
+      <File FileName="Pages/CoountryCustromers.razor" Line="45" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Querys" expanded="True">
+            <Node name="Querys" expanded="True">
+              <Node name="Components" expanded="True">
+                <Node name="List.razor" expanded="True" />
+              </Node>
+              <Node name="Models" expanded="True" />
+              <Node name="Pages" expanded="True">
+                <Node name="CoountryCustromers.razor" selected="True" />
+              </Node>
+              <Node name="Shared" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>
